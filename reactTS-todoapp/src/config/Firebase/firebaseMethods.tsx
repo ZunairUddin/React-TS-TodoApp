@@ -50,7 +50,7 @@ const writeDataToDatabase = (data: data, nodeName: string, id?: string) => {
 };
 
 const getDataFromDatabase = (nodeName?: string, id?: string) => {
-  //by default it'll get all the data in the form of object if want single data then pass id(2nd argument) //
+  //by default it'll get all the data in the form of object if want single data then pass nodename and id //
 
   return new Promise<void>((resolve, reject) => {
     const reference = ref(database, `${nodeName || ""}/${id || ""}`);
@@ -68,7 +68,7 @@ const getDataFromDatabase = (nodeName?: string, id?: string) => {
 
 //============Authentication Functions==========//
 const createUser = (userObj: userObj) => {
-  //SIGNUP FUNCTION
+  //SIGNUP USER FUNCTION
   return new Promise<string>((resolve, reject) => {
     createUserWithEmailAndPassword(auth, userObj.email, userObj.password)
       .then((userCredential) => {
@@ -86,7 +86,7 @@ const createUser = (userObj: userObj) => {
 };
 
 const loginUser = (userObj: loginUser) => {
-  //LOGIN FUNCTION
+  //LOGIN USER FUNCTION
 
   return new Promise<UserCredential>((resolve, reject) => {
     signInWithEmailAndPassword(auth, userObj.email, userObj.password)
@@ -101,6 +101,7 @@ const loginUser = (userObj: loginUser) => {
 };
 
 const signOutUser = () => {
+  //SIGNOUT CURRENT USER FUNCTION
   return signOut(auth);
 };
 
