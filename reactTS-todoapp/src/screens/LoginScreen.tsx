@@ -13,10 +13,12 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 function LoginScreen() {
+  //=====interFace======//
   interface userData {
     email: string;
     password: string;
   }
+  //=====interFace END======//
 
   //=====ICON variables Start======//
   const loginIcon = <LoginIcon fontSize="medium" />;
