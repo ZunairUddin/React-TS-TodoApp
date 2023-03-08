@@ -1,12 +1,10 @@
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import {
-  getDatabase,
-  push,
-  ref,
-  set,
-  onValue,
-  DataSnapshot,
-} from "firebase/database";
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  UserCredential,
+} from "firebase/auth";
+import { getDatabase, push, ref, set, onValue } from "firebase/database";
 import app from "./firebaseConfig";
 
 const database = getDatabase(app); //initializing DB
@@ -20,6 +18,11 @@ interface userObj {
   password: string;
   username: string;
   uid?: string;
+}
+
+interface loginUser {
+  email: string;
+  password: string;
 }
 
 interface data {
@@ -43,11 +46,11 @@ const writeDataToDatabase = (data: data, nodeName: string, id?: string) => {
   return set(reference, data);
 };
 
-const getDataFromDatabase = (nodeName: string, id?: string) => {
+const getDataFromDatabase = (nodeName?: string, id?: string) => {
   //by default it'll get all the data in the form of object if want single data then pass id(2nd argument) //
 
   return new Promise<void>((resolve, reject) => {
-    const reference = ref(database, `${nodeName}/${id || ""}`);
+    const reference = ref(database, `${nodeName || ""}/${id || ""}`);
 
     onValue(reference, (snapshot) => {
       const data = snapshot.val();
@@ -62,6 +65,7 @@ const getDataFromDatabase = (nodeName: string, id?: string) => {
 
 //============Authentication Functions==========//
 const createUser = (userObj: userObj) => {
+  //SIGNUP FUNCTION
   return new Promise<string>((resolve, reject) => {
     createUserWithEmailAndPassword(auth, userObj.email, userObj.password)
       .then((userCredential) => {
@@ -78,4 +82,19 @@ const createUser = (userObj: userObj) => {
   });
 };
 
-export { createUser, writeDataToDatabase, getDataFromDatabase };
+const loginUser = (userObj: loginUser) => {
+  //LOGIN FUNCTION
+
+  return new Promise<UserCredential>((resolve, reject) => {
+    signInWithEmailAndPassword(auth, userObj.email, userObj.password)
+      .then((userCredential) => {
+        // Signed in
+        resolve(userCredential);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+export { createUser, writeDataToDatabase, getDataFromDatabase, loginUser };
