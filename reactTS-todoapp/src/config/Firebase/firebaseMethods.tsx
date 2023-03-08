@@ -3,6 +3,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   UserCredential,
+  onAuthStateChanged,
+  User,
+  signOut,
 } from "firebase/auth";
 import { getDatabase, push, ref, set, onValue } from "firebase/database";
 import app from "./firebaseConfig";
@@ -97,4 +100,28 @@ const loginUser = (userObj: loginUser) => {
   });
 };
 
-export { createUser, writeDataToDatabase, getDataFromDatabase, loginUser };
+const signOutUser = () => {
+  return signOut(auth);
+};
+
+const getCurrentUser = () => {
+  //GET CURRENT LOGGED IN USER FUNCTION
+  return new Promise<User>((resolve, reject) => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        resolve(user);
+      } else {
+        reject("no logged in user found");
+      }
+    });
+  });
+};
+
+export {
+  createUser,
+  writeDataToDatabase,
+  getDataFromDatabase,
+  loginUser,
+  getCurrentUser,
+  signOutUser,
+};
